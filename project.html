@@ -80,6 +80,38 @@
 
 								<p>BAMA is a Bayesian mediation method for selecting active mediators. BAMA specifies a Bayesian sparse linear mixed model (BSLMM) prior, also known as the two-component spike-and-slab prior, also known as the two-component spike-and-slab prior. In this project, I'll mainly focus on the first two methods.</p>
 								
+								<header> <b>Sensitivity analysis</b> </header>
+								
+								<p>Sensitivity analysis parameter:</p>
+								
+								<p>For each possible value \(m\) of the mediator, consider the following sensitivity analysis parameter for covariate \(C\): \(\gamma_{mc} = E[Y_{1m}|X = 1, m, c] - E[Y_{1m}|X = 0, m, c]\). So, \(\gamma_{1c} = E[Y_{11}|X = 1, M=1, c] - E[Y_{11}|X = 0, M=1, c]\) and \(\gamma_{0c} = E[Y_{10}|X = 1, M=0, c] - E[Y_{10}|X = 0, M=0, c]\). Here we will exploit this sensitivity analysis parameter \(\gamma_{mc}\) for inference about natural direct and indirect effects in the potential presence of an exposure-induced mediator-outcome confounder.</p>
+								
+								<p>Sensitivity analysis method:</p>
+								
+								<p>If the exposure is randomized, we might then proceed to attempt to estimate natural direct and indirect effect using methods, which will be consistent for natural direct and indirect effects if no-unmeasured-confounding assumptions defined in the sections above hold. Let's define,</p>
+								$$Q_1=\sum_m E[Y|X = 1, m, c]\{P(m|X=1,c)-P(m|X=0,c)\},$$
+								$$Q_2=\sum_m \{E[Y|X = 1, m, c]-E[Y|X = 0, m, c]\} P(m|X=0,c).$$
+								<p>The expressions \(Q_1\) and \(Q_2\) will be consistent for the natural indirect and direct effects, respectively, if the assumptions hold. Suppose that these assumptions do not hold but that exposure is randomized. If we had unmeasured mediator-outcome confounding variables that were not affected by exposure we could use sensitivity analysis techniques in VanderWeele (2010). However, if we have a mediator-outcome confounder that is affected by exposure, then the techniques in VanderWeele (2010) are inapplicable.</p>
+								
+								<p>Let's also define the bias factor for natural indirect effect, \(B^{NIE}_c\), as the difference between \(Q_1\) and the true natural indirect effect; and define the bias factor for natural direct effect, \(B^{NDE}_c\), as the difference between \(Q_2\) and the true natural direct effect; i.e.</p>
+								$$B^{NIE}_c=Q_1-E[Y_{1M_1}-Y_{1M_0}|c],$$
+								$$B^{NDE}_c=Q_2-E[Y_{1M_0}-Y_{0M_0}|c].$$
+								<p>We then have the following results (proofs are in VanderWeele and Chiba, 2015): if \(\Gamma_c=\sum_m \gamma_{mc}P(m|X=0,c)\), then \(B^{NIE}_c=-\Gamma_c\) and \(B^{NDE}_c=\Gamma_c\). We thus have that</p>
+								$$E[Y_{1M_1}-Y_{1M_0}|c]=Q_1-B^{NIE}_c,$$
+								$$E[Y_{1M_0}-Y_{0M_0}|c]=Q_2-B^{NDE}_c.$$
+								<p>where \(B^{NIE}_c=-B^{NDE}_c\).</p>
+								
+								<p>If we estimate Q1 and Q2 using methods for natural indirect and direct effects (e.g. van der Laan and Petersen, 2008; VanderWeele and Vansteelandt, 2009; Imai et al., 2010; Valeri and VanderWeele, 2012; Tchetgen Tchetgen and Shpitser, 2012) but if the identification assumptions (1)–(4) do not hold because of unmeasured mediator-outcome confounding or an exposure-induced mediator-outcome confounding variable, then our estimators will not be consistent for the true natural indirect and direct effects. However, we can obtain corrected estimates of the natural indirect and direct effects by specifying the sensitivity analysis parameter \(\gamma_{mc}\) for each level of \(m\) (we will have two such parameters if \(M\) is binary as above) and then computing the bias factors. To obtain corrected estimates for natural indirect and direct effects we then subtract the bias factors, \(B^{NIE}_c\) and \(B^{NDE}_c\), respectively, from our estimates of the natural indirect and direct effects. The corrected estimators will be consistent for the true natural indirect and direct effects if we have specified the sensitivity analysis parameters \(\gamma_{mc}\) correctly. Of course, we do not know what the true values of these sensitivity analysis parameters are but we can vary them in a sensitivity analysis to assess the extent to which our conclusions about direct and indirect effects depend on the magnitude of these parameters.</p>
+								
+								<p>The sensitivity analysis parameters in Theorem 1 depend on the probabilities \(P(m|X = 0, c)\) which must be estimated from the data. This can make obtaining corrected confidence intervals for direct and indirect effect estimates more challenging. If γmc were constant across strata of \(m\) then the bias factors BNIEc and \(B^{NDE}_c\) would no longer depend on \(P(m|X = 0, c)\) and we could simply subtract \(B^{NIE}_c\) and \(B^{NDE}_c\) from both limits of the confidence intervals for \(Q_1\) and \(Q_2\) to obtain corrected confidence intervals for natural indirect and direct effects respectively. Likewise, if the data set is sufficiently large so that estimates of \(P(m|X = 0, c)\) are very precise e.g. if the mediator were binary and the covariate set C empty, and the sample size large, then approximate corrected confidence intervals for natural indirect and direct effects could be obtained by simply subtracting \(B^{NIE}_c\) and \(B^{NDE}_c\) from both limits of the confidence intervals for \(Q_1\) and \(Q_2\). In other contexts, however, in which we must estimate \(P(m|X = 0, c)\) from the data and our estimates of \(P(m|X = 0, c)\) are themselves subject to sampling variability, then to obtain corrected confidence intervals for natural indirect and direct effects, we could proceed by bootstrapping wherein for each fixed value of the sensitivity analysis parameters γmc and with each bootstrapped sample we would obtain both estimates of \(Q_1\) and \(Q_2\) and estimates of \(P(m|X = 0, c)\) and subsequently \(B^{NIE}_c\) and \(B^{NDE}_c\) to derive a corrected estimate of the natural direct and indirect effects. Corrected confidence intervals could then be obtained by using a percentile method over the corrected estimates across the bootstrapped samples.</p>
+								
+								<p>Also, a corollary in VanderWeele and Chiba (2015) states that if the sensitivity analysis parameter \(\gamma_{mc}\) is non-negative for all values of \(m\), then using the observed data and estimators that are consistent for \(Q_1\) and \(Q_2\), we will numerically underestimate the true natural indirect effect and numerically overestimate the true natural direct effect. Conversely, if the sensitivity analysis parameter \(\gamma_{mc}\) is non-positive for all values of \(m\), then using the observed data and estimators that are consistent for \(Q_1\) and \(Q_2\), we will overestimate the true natural indirect effect and underestimate the true natural direct effect.</p>
+								
+								<p>Comparison with other sensitivity ananlysis techniques:</p>
+								
+								<p>Vansteelandt and VanderWeele (2012) also proposed a sensitivity analysis technique for an exposure-induced mediator-outcome confounder. Their technique, like that of Imai and Yamamoto (2012), requires that data is available on the exposure-induced mediator-outcome confounder, whereas the technique presented here does not. The technique of Vansteelandt and VanderWeele (2012) also involves specifying a selection bias function which can be difficult to interpret in practice, but does have the advantage that it is essentially zero so long as there is no three-way interaction between exposures, confounders and mediators.</p>								
+														
+								
 							</section>
 
 					</div>
